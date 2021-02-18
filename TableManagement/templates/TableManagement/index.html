@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Table Management</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+    {% load static %}
+<!--===============================================================================================-->
+	<link rel="icon" type="image/png" href="{% static 'images/icons/favicon.ico' %}"/>
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'fonts/font-awesome-4.7.0/css/font-awesome.min.css' %}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'vendor/animate/animate.css' %}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'vendor/animate/animate.css' %}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'vendor/perfect-scrollbar/perfect-scrollbar.css' %}">
+<!--===============================================================================================-->
+	<link rel="stylesheet" type="text/css" href="{% static 'css/util.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
+<!--===============================================================================================-->
+</head>
+<body>
+	{% load static %}
+	<div class="limiter">
+		<div class="container-table100">
+			<div class="wrap-table100">
+				<div class="table100 ver4 m-b-110">
+					<div class="table100-head">
+						<table>
+							<thead>
+                                <tr class="row100 head">
+                                    <th class="cell100 column1">id</th>
+                                    <th class="cell100 column2">Table No.</th>
+                                    <th class="cell100 column3">Capacity</th>
+                                    <th class="cell100 column4">Status</th>
+                                    <th class="cell100 column5">Action</th>
+                                </tr>
+							</thead>
+						</table>
+					</div>
+
+					<div class="table100-body js-pscroll">
+						<table>
+							<tbody>
+                                {% for table in tables %}
+                                    <tr class="row100 body">
+                                        <td class="cell100 column1">{{ table.id}}</td>
+                                        <td class="cell100 column2">{{ table.tableNo }}</td>
+                                        <td class="cell100 column3">
+                                            <input type="number" step="1" value="{{ table.capacity }}" id="capacity{{ forloop.counter0 }}">
+                                        </td>
+                                        <td class="cell100 column4">
+                                          <div class="form-group">
+                                            <select class="form-control" id="statusSelection{{ forloop.counter0 }}">
+                                                {% ifequal table.status 'close' %}
+                                                    <option selected="selected">close</option>
+                                                {% else %}
+                                                    <option>close</option>
+                                                {% endifequal %}
+
+                                                {% ifequal table.status 'vacant' %}
+                                                    <option selected="selected">vacant</option>
+                                                {% else %}
+                                                    <option>vacant</option>
+                                                {% endifequal %}
+
+                                                {% ifequal table.status 'seated' %}
+                                                    <option selected="selected">seated</option>
+                                                {% else %}
+                                                    <option>seated</option>
+                                                {% endifequal %}
+
+                                                {% ifequal table.status 'ordered' %}
+                                                    <option selected="selected">ordered</option>
+                                                {% else %}
+                                                    <option>ordered</option>
+                                                {% endifequal %}
+
+                                                {% ifequal table.status 'enjoying' %}
+                                                    <option selected="selected">enjoying</option>
+                                                {% else %}
+                                                    <option>enjoying</option>
+                                                {% endifequal %}
+
+                                                {% ifequal table.status 'cleared' %}
+                                                    <option selected="selected">cleared</option>
+                                                {% else %}
+                                                    <option>cleared</option>
+                                                {% endifequal %}
+
+                                                {% ifequal table.status 'check dropped' %}
+                                                    <option selected="selected">check dropped</option>
+                                                {% else %}
+                                                    <option>check dropped</option>
+                                                {% endifequal %}
+
+                                                {% ifequal table.status 'paid' %}
+                                                    <option selected="selected">paid</option>
+                                                {% else %}
+                                                    <option>paid</option>
+                                                {% endifequal %}
+
+                                                {% ifequal table.status 'finished' %}
+                                                    <option selected="selected">finished</option>
+                                                {% else %}
+                                                    <option>finished</option>
+                                                {% endifequal %}
+                                            </select>
+                                          </div>
+                                        </td>
+                                        <td class="cell100 column5">
+                                            <form action="javascript:submitTableChange{{ forloop.counter0 }}()" method="post" id="form{{ forloop.counter0 }}">
+                                                {% csrf_token %}
+                                                <input class="btn btn-primary" id="submit{{ forloop.counter0 }}" type="submit" value="Submit">  <!-- TODO -->
+                                            </form>
+                                            <script type="text/javascript">
+                                                function submitTableChange{{ forloop.counter0 }}() {
+                                                    let form = document.getElementById('form{{ forloop.counter0 }}');
+                                                    form.action = '/table/edit_table/{{ table.id }}/';
+                                                    form.action += document.getElementById('capacity{{ forloop.counter0 }}').value + '/';
+                                                    form.action += document.getElementById('statusSelection{{ forloop.counter0 }}').value +'/';
+                                                    form.submit();
+                                                }
+                                            </script>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+
+
+<!--===============================================================================================-->
+	<script src="{% static 'vendor/jquery/jquery-3.2.1.min.js' %}"></script>
+<!--===============================================================================================-->
+	<script src="{% static 'vendor/bootstrap/js/popper.js' %}"></script>
+	<script src="{% static 'vendor/bootstrap/js/bootstrap.min.js' %}"></script>
+<!--===============================================================================================-->
+	<script src="{% static 'vendor/select2/select2.min.js' %}"></script>
+<!--===============================================================================================-->
+	<script src="{% static 'vendor/perfect-scrollbar/perfect-scrollbar.min.js' %}"></script>
+	<script>
+		$('.js-pscroll').each(function(){
+			var ps = new PerfectScrollbar(this);
+
+			$(window).on('resize', function(){
+				ps.update();
+			})
+		});
+
+        $(".dropdown-menu li a").click(function() {
+            $(this).parents(".dropdown").find('.btn').html($(this).text() + ' <span class="caret"></span>');
+            $(this).parents(".dropdown").find('.btn').val($(this).data('value'));
+        });
+
+	</script>
+<!--===============================================================================================-->
+	<script src={% static 'js/main.js' %}""></script>
+
+</body>
+</html>
