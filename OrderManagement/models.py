@@ -12,7 +12,7 @@ class DishContent(EmbeddedDocument):
 class Customer(EmbeddedDocument):
     name = StringField()
     quantity = IntField()
-    membershipID = StringField()
+    username = StringField()
 
 
 class Order(Document):
