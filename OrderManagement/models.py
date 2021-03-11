@@ -22,5 +22,6 @@ class Order(Document):
     diningOption = StringField()
     isFinished = BooleanField()
     customerInfo = EmbeddedDocumentField(Customer)
+    _partitionKey = StringField()
 
     meta = {'collection': 'orders'}
