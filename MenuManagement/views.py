@@ -13,7 +13,7 @@ def index(request):
 def add_dish(request):
     name, description, category, price, ETP = Utils.get_dish_info(request)
 
-    new_dish = Dish(name=name, description=description, category=category, price=price, ETP=ETP)
+    new_dish = Dish(name=name, description=description, category=category, price=price, ETP=ETP, _partitionKey="ding")
     new_dish.save()
 
     return redirect('/menu')
@@ -22,7 +22,12 @@ def add_dish(request):
 def edit_dish(request, oid):
     name, description, category, price, ETP = Utils.get_dish_info(request)
 
-    Dish.objects.filter(id=oid).update(name=name, description=description, category=category, price=price, ETP=ETP)
+    Dish.objects.filter(id=oid).update(name=name,
+                                       description=description,
+                                       category=category,
+                                       price=price,
+                                       ETP=ETP,
+                                       _partitionKey="ding")
 
     return redirect('/menu')
 
