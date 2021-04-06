@@ -105,7 +105,7 @@
                                         <td class="cell100 column5">
                                             <form action="javascript:submitTableChange{{ forloop.counter0 }}()" method="post" id="form{{ forloop.counter0 }}">
                                                 {% csrf_token %}
-                                                <input class="btn btn-primary" id="submit{{ forloop.counter0 }}" type="submit" value="Submit">  <!-- TODO -->
+                                                <input class="btn btn-primary" id="submit{{ forloop.counter0 }}" type="submit" value="Submit">
                                             </form>
                                             <script type="text/javascript">
                                                 function submitTableChange{{ forloop.counter0 }}() {

@@ -10,4 +10,5 @@ from . import views
 app_name = 'KitchenTicket'
 urlpatterns = [
     path('', views.index, name="index"),
+    path('edit_status/<str:order_id>/<str:dish_id>/<str:new_status>', views.edit_status, name="edit"),
 ]

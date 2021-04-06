@@ -82,7 +82,7 @@
                         {% for dish in order.dishes %}
                             {% if dish.status == 'preparing' %}
                                 <tr data-status="In Progress">
-                                    <td>{{ forloop.parentloop.count0 }}</td>
+                                    <td>{{ forloop.parentloop.counter }}-{{ forloop.counter }}</td>
                                     <td>
                                         {% for dish_content in all_dishes %}
                                             {% ifequal dish_content.id dish.dishID %}
@@ -90,15 +90,28 @@
                                             {% endifequal %}
                                         {% endfor %}
                                     </td>
-                                    <td>01:12</td> <!-- TODO: real-time clock needed -->
+                                    <td id="time{{ forloop.parentloop.counter }}and{{ forloop.counter }}">
+                                        34:34
+                                    </td> <!-- TODO: real-time clock needed -->
                                     <td><span class="label label-warning">In Progress</span></td>
                                     <td>{{ order.tableNo }}</td>
                                     <td>{{ dish.amount }}</td>
-                                    <td><a href="#" class="btn btn-sm manage">Manage</a></td>  <!-- TODO: function -->
+                                    <td>
+                                        <form action="/kitchen/edit_status/{{ order.id }}/{{ dish.dishID }}/prepared" method="post">
+                                            {% csrf_token %}
+                                            <input type="submit" class="btn btn-success" value="Finish">
+                                        </form>
+                                        <br>
+                                        <form action="/kitchen/edit_status/{{ order.id }}/{{ dish.dishID }}/declined" method="post">
+                                            {% csrf_token %}
+                                            <input type="submit" class="btn btn-danger" value="Decline">
+                                        </form>
+                                    </td>
+                                    <!-- TODO: function -->
                                 </tr>
                             {% elif dish.status == 'prepared' %}
                                 <tr data-status="Prepared">
-                                    <td>{{ forloop.parentloop.count0 }}</td>
+                                    <td>{{ forloop.parentloop.counter }}-{{ forloop.counter }}</td>
                                     <td>
                                         {% for dish_content in all_dishes %}
                                             {% ifequal dish_content.id dish.dishID %}
@@ -110,11 +123,12 @@
                                     <td><span class="label label-success">Prepared</span></td>
                                     <td>{{ order.tableNo }}</td>
                                     <td>{{ dish.amount }}</td>
-                                    <td><a href="#" class="btn btn-sm manage">Manage</a></td>  <!-- TODO: function -->
+                                    <td></td>
+                                    <!-- TODO: function -->
                                 </tr>
                             {% else %}
                                 <tr data-status="Declined">
-                                    <td>{{ forloop.parentloop.count0 }}</td>
+                                    <td>{{ forloop.parentloop.counter }}-{{ forloop.counter }}</td>
                                     <td>
                                         {% for dish_content in all_dishes %}
                                             {% ifequal dish_content.id dish.dishID %}
@@ -126,7 +140,8 @@
                                     <td><span class="label label-danger">Declined</span></td>
                                     <td>{{ order.tableNo }}</td>
                                     <td>{{ dish.amount }}</td>
-                                    <td><a href="#" class="btn btn-sm manage">Manage</a></td>  <!-- TODO: function -->
+                                    <td></td>
+                                    <!-- TODO: function -->
                                 </tr>
                             {% endif %}
                         {% endfor %}
