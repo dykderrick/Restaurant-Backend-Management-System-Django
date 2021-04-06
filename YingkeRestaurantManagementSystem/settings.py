@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'TableManagement.apps.TablemanagementConfig',
     'Registration.apps.RegistrationConfig',
     'PromoCodeManagement.apps.PromocodemanagementConfig',
+    'KitchenTicket.apps.KitchenticketConfig',
 ]
 
 MIDDLEWARE = [
