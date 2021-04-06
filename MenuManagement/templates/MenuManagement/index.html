@@ -184,7 +184,7 @@
 <div id="addDishModal" class="modal fade">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form action="/menu/add_dish/" method="post">
+            <form action="/menu/add_dish/" method="post" enctype="multipart/form-data">
                 {% csrf_token %}
                 <div class="modal-header">
                     <h4 class="modal-title">Add Dish</h4>
@@ -211,6 +211,10 @@
                     <div class="form-group">
                         <label>ETP</label>
                         <input name="ETP" type="number" step="1" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Image</label>
+                        <input name="image" type="file" accept="image/x-png,image/gif,image/jpeg">
                     </div>
                 </div>
                 <div class="modal-footer">
