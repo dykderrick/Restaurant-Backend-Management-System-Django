@@ -14,6 +14,7 @@
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
     <script>
         $(document).ready(function () {
             $(".btn-group .btn").click(function () {
@@ -90,24 +91,73 @@
                                             {% endifequal %}
                                         {% endfor %}
                                     </td>
-                                    <td id="time{{ forloop.parentloop.counter }}and{{ forloop.counter }}">
-                                        34:34
+                                    <td>
+                                        <div id="time{{ forloop.parentloop.counter }}and{{ forloop.counter }}">
+                                            99:99
+                                        </div>
                                     </td> <!-- TODO: real-time clock needed -->
                                     <td><span class="label label-warning">In Progress</span></td>
                                     <td>{{ order.tableNo }}</td>
                                     <td>{{ dish.amount }}</td>
                                     <td>
-                                        <form action="/kitchen/edit_status/{{ order.id }}/{{ dish.dishID }}/prepared" method="post">
+                                        <form action="/kitchen/edit_status/{{ order.id }}/{{ dish.dishID }}/prepared"
+                                              method="post">
                                             {% csrf_token %}
                                             <input type="submit" class="btn btn-success" value="Finish">
                                         </form>
                                         <br>
-                                        <form action="/kitchen/edit_status/{{ order.id }}/{{ dish.dishID }}/declined" method="post">
+                                        <form action="/kitchen/edit_status/{{ order.id }}/{{ dish.dishID }}/declined"
+                                              method="post">
                                             {% csrf_token %}
                                             <input type="submit" class="btn btn-danger" value="Decline">
                                         </form>
                                     </td>
-                                    <!-- TODO: function -->
+                                    <script type="text/javascript">
+                                        function refreshTimer() {
+                                            let ETPString = "{% for dish_content in all_dishes %}{% ifequal dish_content.id dish.dishID %}{{ dish_content.ETP }}{% endifequal %}{% endfor %}";
+                                            let ETP = parseInt(ETPString) * 60000;
+
+                                            // https://momentjs.com
+                                            let fixedDate = moment("{{ order.createdTime }}", "MMMM DD, YYYY, h:mm a").toDate();
+
+                                            fixedDate.setMilliseconds(fixedDate.getMilliseconds() + ETP);
+
+                                            let date = new Date();
+
+                                            let div = document.getElementById("time{{ forloop.parentloop.counter }}and{{ forloop.counter }}");
+
+                                            div.innerHTML = msToMinSec(fixedDate - date);
+                                        }
+
+                                        function msToMinSec(s) {
+                                            if (s < 0) return "00:00"
+
+                                            let ms = s % 1000;
+                                            s = (s - ms) / 1000;
+
+                                            let secs = s % 60;
+                                            let secsString
+                                            if (secs <= 9) {
+                                                secsString = "0" + secs.toString()
+                                            } else {
+                                                secsString = secs.toString()
+                                            }
+
+
+                                            s = (s - secs) / 60;
+                                            let minutes = s % 60;
+                                            let minutesString
+                                            if (minutes <= 9) {
+                                                minutesString = "0" + minutes.toString();
+                                            } else {
+                                                minutesString = minutes.toString();
+                                            }
+
+                                            return minutesString + ':' + secsString;
+                                        }
+
+                                        setInterval("refreshTimer()", 1000);
+                                    </script>
                                 </tr>
                             {% elif dish.status == 'prepared' %}
                                 <tr data-status="Prepared">
@@ -141,7 +191,6 @@
                                     <td>{{ order.tableNo }}</td>
                                     <td>{{ dish.amount }}</td>
                                     <td></td>
-                                    <!-- TODO: function -->
                                 </tr>
                             {% endif %}
                         {% endfor %}
