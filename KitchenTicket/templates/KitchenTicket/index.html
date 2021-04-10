@@ -113,12 +113,13 @@
                                         </form>
                                     </td>
                                     <script type="text/javascript">
-                                        function refreshTimer() {
+                                        function refreshTimer{{ forloop.parentloop.counter }}_{{ forloop.counter }}() {
                                             let ETPString = "{% for dish_content in all_dishes %}{% ifequal dish_content.id dish.dishID %}{{ dish_content.ETP }}{% endifequal %}{% endfor %}";
                                             let ETP = parseInt(ETPString) * 60000;
 
                                             // https://momentjs.com
-                                            let fixedDate = moment("{{ order.createdTime }}", "MMMM DD, YYYY, h:mm a").toDate();
+                                            let fixedDate = moment.utc("{{ order.createdTime }}", "MMMM DD, YYYY, h:mm a").toDate();
+                                            console.log(moment.utc("{{ order.createdTime }}", "MMMM DD, YYYY, h:mm a"))
 
                                             fixedDate.setMilliseconds(fixedDate.getMilliseconds() + ETP);
 
@@ -156,7 +157,7 @@
                                             return minutesString + ':' + secsString;
                                         }
 
-                                        setInterval("refreshTimer()", 1000);
+                                        setInterval("refreshTimer{{ forloop.parentloop.counter }}_{{ forloop.counter }}()", 1000);
                                     </script>
                                 </tr>
                             {% elif dish.status == 'prepared' %}
